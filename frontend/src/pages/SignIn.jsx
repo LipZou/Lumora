@@ -19,7 +19,7 @@ function SignIn() {
             if(response.data.success) {
                 alert('Successful login!');
             } else {
-                alert('Login failed! Please check your email and password');
+                alert(response.data.message);
             }
         } catch(error){
             console.error('Login Error:', error);

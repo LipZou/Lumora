@@ -8,7 +8,9 @@ function HomeHeader() {
                 <Link to="/signin" style={{ textDecoration: 'none' }}>
                     <button style={buttonStyle}>Login</button>
                 </Link>
-                <button style = {{ ...buttonStyle, backgroundColor: '#4CAF50', color: 'white'}}>Sign Up</button>
+                <Link to="/signup">
+                    <button style={{...buttonStyle, backgroundColor: '#4CAF50', color: 'white'}}>Sign Up</button>
+                </Link>
             </div>
         </div>
     );
