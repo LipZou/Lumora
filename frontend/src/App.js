@@ -5,6 +5,8 @@ import Home from './pages/Home'
 import UploadButton from "./components/UploadButton"
 import SignIn from './pages/SignIn'
 import SignUp from './pages/SignUp'
+import Dashboard from './pages/Dashboard'
+import LoggedInHome from './pages/LoggedInHome'
 
 function App() {
   const [image, setImage] = useState(null);
@@ -26,6 +28,8 @@ function App() {
           <Route path="/" element={<Home />} />
           <Route path="/signin" element={<SignIn />} />
           <Route path="/signup" element={<SignUp />} />
+          <Route path="/dashboard" element={<Dashboard />} />
+          <Route path="/home" element={<LoggedInHome />} />
           {/* 以后可以加更多，比如 /signup */}
         </Routes>
       </Router>
