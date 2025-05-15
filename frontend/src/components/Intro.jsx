@@ -13,26 +13,23 @@ function Intro() {
 }
 
 const containerStyle = {
-    marginTop: '40px',
-    textAlign: 'center',
+    margin: '40px auto 0',
+    padding: '0 20px',
     maxWidth: '900px',
-    marginLeft: 'auto',
-    marginRight: 'auto',
+    textAlign: 'left',
     color: '#222831',
 };
 
 const headlineStyle = {
-    fontSize: '28px',
+    fontSize: '1.75rem',
     fontWeight: 'bold',
-    textAlign: 'left',
     marginBottom: '16px',
 };
 
 const paragraphStyle = {
-    fontSize: '18px',
+    fontSize: '1.125rem',
     lineHeight: '1.6',
     fontStyle: 'italic',
-    textAlign: 'left',
     color: '#393E46',
 };
 

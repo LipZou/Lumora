@@ -7,6 +7,7 @@ import SignIn from './pages/SignIn'
 import SignUp from './pages/SignUp'
 import Dashboard from './pages/Dashboard'
 import LoggedInHome from './pages/LoggedInHome'
+import FloatingBackground from './components/FloatingBackground';
 
 function App() {
   const [image, setImage] = useState(null);
@@ -23,7 +24,9 @@ function App() {
   };
 
   return (
+
       <Router>
+        <FloatingBackground />
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/signin" element={<SignIn />} />

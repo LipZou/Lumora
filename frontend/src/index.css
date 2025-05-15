@@ -11,3 +11,18 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 }
+
+@keyframes floatUp {
+  0% {
+    transform: translateY(0px) scale(1);
+    opacity: 0.3;
+  }
+  50% {
+    transform: translateY(-100px) scale(1.05);
+    opacity: 0.2;
+  }
+  100% {
+    transform: translateY(-200px) scale(1);
+    opacity: 0.3;
+  }
+}
