@@ -20,7 +20,56 @@ function ColorBox({ color }) {
     );
 }
 
+function sortByHSL(a, b) {
+    const [ha, sa, la] = rgbToHsl(a.rgb);
+    const [hb, sb, lb] = rgbToHsl(b.rgb);
+
+    const hueA = isNaN(ha) ? 999 : ha;
+    const hueB = isNaN(hb) ? 999 : hb;
+
+    // 按 hue 升序排序（色相环）
+    if (hueA !== hueB) return hueA - hueB;
+
+    // hue 相同，按 饱和度（s）降序，饱和度越高越靠前
+    if (sa !== sb) return sb - sa;
+
+    // 饱和度相同，按 明度（l）升序，越亮越靠前
+    return la - lb;
+}
+
+function rgbToHsl([r, g, b]) {
+    r /= 255;
+    g /= 255;
+    b /= 255;
+    const max = Math.max(r, g, b), min = Math.min(r, g, b);
+    let h, s, l = (max + min) / 2;
+
+    if (max === min) {
+        h = s = 0;
+    } else {
+        const d = max - min;
+        s = l > 0.5 ? d / (2 - max - min) : d / (max + min);
+        switch (max) {
+            case r: h = (g - b) / d + (g < b ? 6 : 0); break;
+            case g: h = (b - r) / d + 2; break;
+            case b: h = (r - g) / d + 4; break;
+        }
+        h *= 60;
+    }
+
+    return [h, s, l];
+}
+
+function safeHue(rgb) {
+    const [h] = rgbToHsl(rgb);
+    return isNaN(h) ? 999 : h; // 灰色、白色等没有 hue 的放最后
+}
+
 export default function ColorPopup({ newColors, existingColors, onClose }) {
+
+    const sortedNewColors = [...newColors].sort(sortByHSL);
+    const sortedExistingColors = [...existingColors].sort(sortByHSL);
+
     return (
         <div style={overlayStyle}>
             <div style={popupStyle}>
@@ -30,7 +79,7 @@ export default function ColorPopup({ newColors, existingColors, onClose }) {
                     <div>
                         <div style={sectionTitleStyle}>New Colors</div>
                         <div style={colorGridStyle}>
-                            {newColors.map((color, index) => (
+                            {sortedNewColors.map((color, index) => (
                                 <ColorBox key={`new-${index}`} color={color} />
                             ))}
                         </div>
@@ -40,7 +89,7 @@ export default function ColorPopup({ newColors, existingColors, onClose }) {
                 <div>
                     <div style={sectionTitleStyle}>Recognized Colors</div>
                     <div style={colorGridStyle}>
-                        {existingColors.map((color, index) => (
+                        {sortedExistingColors.map((color, index) => (
                             <ColorBox key={`exist-${index}`} color={color} />
                         ))}
                     </div>
@@ -66,6 +115,8 @@ export default function ColorPopup({ newColors, existingColors, onClose }) {
         </div>
     );
 }
+
+
 
 const overlayStyle = {
     position: 'fixed',

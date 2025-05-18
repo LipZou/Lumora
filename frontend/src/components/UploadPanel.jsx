@@ -2,6 +2,7 @@ import React, { useState, useRef, useEffect } from 'react';
 import ColorPopup from './ColorPopup';
 import { extractDominantColors, matchColorsWithDatabase } from '../utils/colorUtils';
 import { colorDB } from '../data/colorDB'; // 如果你系统色表在另一个文件中
+import { getUserColors, addUserColor } from '../api/userColors';
 
 function UploadPanel() {
     const [image, setImage] = useState(null);
@@ -69,17 +70,28 @@ function UploadPanel() {
     const handleProcess = async () => {
         if (!image) return;
 
-        // Step 1: 图像处理
         switchMode(processingType, styleEffect);
         setProcessed(true);
 
-        // Step 2: 调用正确的颜色分析函数
-        const { newColors, existingColors } = await analyzeImageColors(image, colorDB, []); // 第三个参数为用户已有色表，暂传空
+        // TODO: 获取当前用户 ID，假设你已经存入 localStorage
+        const userId = localStorage.getItem('userId');
+        if (!userId) {
+            alert("请先登录");
+            return;
+        }
 
-        console.log("🆕 newColors", newColors);
-        console.log("✅ existingColors", existingColors);
+        // 获取用户已有颜色
+        const userColors = await getUserColors(userId);
 
-        // Step 3: 显示弹窗
+        // 分析颜色（与系统色表+用户已有色表比对）
+        const { newColors, existingColors } = await analyzeImageColors(image, colorDB, userColors);
+
+        // 保存新颜色到数据库
+        for (const color of newColors) {
+            await addUserColor(userId, color);
+        }
+
+        // 弹窗展示
         setNewColors(newColors);
         setExistingColors(existingColors);
         setShowColorPopup(true);
@@ -254,7 +266,7 @@ function UploadPanel() {
     }
 
     // 从图像提取颜色
-    function extractDominantColors(imageSrc, blockSize = 10) {
+    function extractDominantColors(imageSrc, blockSize = 150) {
         return new Promise((resolve) => {
             const img = new Image();
             img.crossOrigin = 'anonymous';
@@ -269,26 +281,38 @@ function UploadPanel() {
                 ctx.drawImage(img, 0, 0);
 
                 const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
-                const colorMap = new Map();
+                const data = imageData.data;
 
-                const step = blockSize;
-                for (let y = 0; y < canvas.height; y += step) {
-                    for (let x = 0; x < canvas.width; x += step) {
-                        const i = (y * canvas.width + x) * 4;
-                        const r = imageData.data[i];
-                        const g = imageData.data[i + 1];
-                        const b = imageData.data[i + 2];
-                        const key = `${r},${g},${b}`;
-                        colorMap.set(key, (colorMap.get(key) || 0) + 1);
+                const colors = [];
+
+                for (let y = 0; y < canvas.height; y += blockSize) {
+                    for (let x = 0; x < canvas.width; x += blockSize) {
+                        let r = 0, g = 0, b = 0, count = 0;
+
+                        for (let dy = 0; dy < blockSize; dy++) {
+                            for (let dx = 0; dx < blockSize; dx++) {
+                                const px = x + dx;
+                                const py = y + dy;
+                                if (px >= canvas.width || py >= canvas.height) continue;
+
+                                const i = (py * canvas.width + px) * 4;
+                                r += data[i];
+                                g += data[i + 1];
+                                b += data[i + 2];
+                                count++;
+                            }
+                        }
+
+                        if (count > 0) {
+                            r = Math.round(r / count);
+                            g = Math.round(g / count);
+                            b = Math.round(b / count);
+                            colors.push([r, g, b]);
+                        }
                     }
                 }
 
-                const sorted = [...colorMap.entries()]
-                    .sort((a, b) => b[1] - a[1])
-                    .slice(0, 20)
-                    .map(([key]) => key.split(',').map(Number));
-
-                resolve(sorted); // Array of [r, g, b]
+                resolve(colors);
             };
         });
     }
@@ -301,24 +325,22 @@ function UploadPanel() {
         const detectedColors = [];
         const newColors = [];
         const existingColors = [];
+        const seenHex = new Set();
 
         for (const rgb of detectedRGBs) {
             const matched = findClosestColor(rgb, allColors);
 
             if (matched) {
-                detectedColors.push(matched);
+                if (seenHex.has(matched.hex.toLowerCase())) continue;
+                seenHex.add(matched.hex.toLowerCase());
+
                 if (userColorHexSet.has(matched.hex.toLowerCase())) {
                     existingColors.push(matched);
                 } else {
                     newColors.push(matched);
                 }
-            } else {
-                // 没有匹配，认为是新颜色，临时生成一个 hex
-                const hex = `#${rgb.map(x => x.toString(16).padStart(2, '0')).join('')}`;
-                const newColor = { name: 'Unknown', rgb, hex };
-                newColors.push(newColor);
-                detectedColors.push(newColor);
             }
+            // ❌ 移除 else 分支：不再加入 Unknown 颜色
         }
 
         return { detectedColors, newColors, existingColors };

@@ -13,7 +13,7 @@ function SignIn() {
         e.preventDefault();
 
         try {
-            const response = await axios.post('http://localhost:5001/api/login', {
+            const response = await axios.post('/api/login', {
                 email: email,
                 password: password,
             });
@@ -21,6 +21,9 @@ function SignIn() {
             console.log('Server Response:', response.data);
 
             if(response.data.success) {
+                // ✅ 保存 userId 到 localStorage
+                localStorage.setItem("userId", response.data.user._id);
+
                 alert('Successful login!');
                 navigate('/dashboard')
             } else {
