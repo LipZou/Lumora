@@ -26,7 +26,6 @@ function App() {
   return (
 
       <Router>
-        <FloatingBackground />
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/signin" element={<SignIn />} />

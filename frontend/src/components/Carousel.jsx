@@ -67,7 +67,8 @@ function Carousel() {
                                     translateX(${offset * 50}%)
                                     scale(${offset === 0 ? 1 : 0.8})
                                 `,
-                                opacity: offset === 0 ? 1 : 0.4,
+                                opacity: 1,
+                                backgroundColor: 'white',
                                 zIndex: offset === 0 ? 2 : 1,
                             }}
                         />
@@ -79,27 +80,33 @@ function Carousel() {
 }
 
 const outerWrapperStyle = {
+    maxWidth: '1500px',
+    width: '100%',
+    margin: '40px auto',
+    padding: '0 20px',
     display: 'flex',
     justifyContent: 'center',
     marginTop: '40px', // ✅ 往下移一点
+    position: 'relative',
+    zIndex: 1,
 };
 
 const carouselStyle = {
     display: 'flex',
     alignItems: 'center',
     position: 'relative',
-    width: '900px',
-    height: '400px',
+    width: '80%',          // ✅ 撑满 outerWrapper
+    height: '500px',         // ✅ 可自定义高度
     overflow: 'hidden',
-    borderRadius: '16px',
+    borderRadius: '0px',
 };
 
 const imageStyle = {
     position: 'absolute',
-    width: '70%',
+    width: '70%',           // ✅ 可以改成 '100%' 如果你不做左右偏移
     height: '100%',
     objectFit: 'cover',
-    borderRadius: '16px',
+    borderRadius: '0px',
     transition: 'all 0.5s ease',
     boxShadow: '0 6px 20px rgba(0,0,0,0.25)',
 };

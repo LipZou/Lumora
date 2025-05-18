@@ -13,9 +13,11 @@ function Intro() {
 }
 
 const containerStyle = {
+    maxWidth: '1500px',         // ✅ 跟 Carousel 一样
+    width: '80%',              // ✅ 撑满屏幕宽度（受 maxWidth 限制）
     margin: '40px auto 0',
-    padding: '0 20px',
-    maxWidth: '900px',
+    padding: '0 20px',          // ✅ 和 Carousel 外层一致
+    boxSizing: 'border-box',    // ✅ 避免 padding 推动内容撑宽
     textAlign: 'left',
     color: '#222831',
 };
