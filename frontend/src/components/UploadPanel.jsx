@@ -1,4 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
+import ColorPopup from './ColorPopup';
+import { extractDominantColors, matchColorsWithDatabase } from '../utils/colorUtils';
+import { colorDB } from '../data/colorDB'; // 如果你系统色表在另一个文件中
 
 function UploadPanel() {
     const [image, setImage] = useState(null);
@@ -11,6 +14,11 @@ function UploadPanel() {
 
     const canvasRef = useRef(null);
     const validTypes = ['image/jpeg', 'image/png'];
+
+    // 弹窗状态控制
+    const [showColorPopup, setShowColorPopup] = useState(false);
+    const [newColors, setNewColors] = useState([]);
+    const [existingColors, setExistingColors] = useState([]);
 
     useEffect(() => {
         if (image && processed) {
@@ -58,10 +66,23 @@ function UploadPanel() {
         }
     };
 
-    const handleProcess = () => {
+    const handleProcess = async () => {
         if (!image) return;
+
+        // Step 1: 图像处理
         switchMode(processingType, styleEffect);
         setProcessed(true);
+
+        // Step 2: 调用正确的颜色分析函数
+        const { newColors, existingColors } = await analyzeImageColors(image, colorDB, []); // 第三个参数为用户已有色表，暂传空
+
+        console.log("🆕 newColors", newColors);
+        console.log("✅ existingColors", existingColors);
+
+        // Step 3: 显示弹窗
+        setNewColors(newColors);
+        setExistingColors(existingColors);
+        setShowColorPopup(true);
     };
 
     const generatePixelStyle = (imageSrc, blockSize, callback) => {
@@ -212,6 +233,98 @@ function UploadPanel() {
         };
     };
 
+    // 颜色匹配算法
+    function findClosestColor(rgb, colorList, threshold = 30) {
+        let closest = null;
+        let minDist = Infinity;
+
+        for (const color of colorList) {
+            const [r2, g2, b2] = color.rgb;
+            const dist = Math.sqrt(
+                (rgb[0] - r2) ** 2 + (rgb[1] - g2) ** 2 + (rgb[2] - b2) ** 2
+            );
+
+            if (dist < minDist) {
+                minDist = dist;
+                closest = color;
+            }
+        }
+
+        return minDist <= threshold ? closest : null;
+    }
+
+    // 从图像提取颜色
+    function extractDominantColors(imageSrc, blockSize = 10) {
+        return new Promise((resolve) => {
+            const img = new Image();
+            img.crossOrigin = 'anonymous';
+            img.src = imageSrc;
+
+            img.onload = () => {
+                const canvas = document.createElement('canvas');
+                canvas.width = img.width;
+                canvas.height = img.height;
+
+                const ctx = canvas.getContext('2d');
+                ctx.drawImage(img, 0, 0);
+
+                const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+                const colorMap = new Map();
+
+                const step = blockSize;
+                for (let y = 0; y < canvas.height; y += step) {
+                    for (let x = 0; x < canvas.width; x += step) {
+                        const i = (y * canvas.width + x) * 4;
+                        const r = imageData.data[i];
+                        const g = imageData.data[i + 1];
+                        const b = imageData.data[i + 2];
+                        const key = `${r},${g},${b}`;
+                        colorMap.set(key, (colorMap.get(key) || 0) + 1);
+                    }
+                }
+
+                const sorted = [...colorMap.entries()]
+                    .sort((a, b) => b[1] - a[1])
+                    .slice(0, 20)
+                    .map(([key]) => key.split(',').map(Number));
+
+                resolve(sorted); // Array of [r, g, b]
+            };
+        });
+    }
+
+    // 颜色处理主函数
+    async function analyzeImageColors(imageSrc, allColors, userColors) {
+        const detectedRGBs = await extractDominantColors(imageSrc);
+
+        const userColorHexSet = new Set(userColors.map(c => c.hex.toLowerCase()));
+        const detectedColors = [];
+        const newColors = [];
+        const existingColors = [];
+
+        for (const rgb of detectedRGBs) {
+            const matched = findClosestColor(rgb, allColors);
+
+            if (matched) {
+                detectedColors.push(matched);
+                if (userColorHexSet.has(matched.hex.toLowerCase())) {
+                    existingColors.push(matched);
+                } else {
+                    newColors.push(matched);
+                }
+            } else {
+                // 没有匹配，认为是新颜色，临时生成一个 hex
+                const hex = `#${rgb.map(x => x.toString(16).padStart(2, '0')).join('')}`;
+                const newColor = { name: 'Unknown', rgb, hex };
+                newColors.push(newColor);
+                detectedColors.push(newColor);
+            }
+        }
+
+        return { detectedColors, newColors, existingColors };
+    }
+
+
     // ✅ UI 渲染略（留空）
     return (
         <div style={wrapperStyle}>
@@ -314,6 +427,15 @@ function UploadPanel() {
                         </a>
                     </div>
                 </>
+            )}
+
+            {/* ✅ 弹窗遮罩层（放在最底部 return 内部） */}
+            {showColorPopup && (
+                <ColorPopup
+                    newColors={newColors}
+                    existingColors={existingColors}
+                    onClose={() => setShowColorPopup(false)}
+                />
             )}
 
             <canvas ref={canvasRef} style={{ display: 'none' }} />

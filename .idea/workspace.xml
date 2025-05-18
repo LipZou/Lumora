@@ -5,14 +5,11 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="6f0cfcf1-2321-42cf-a5f9-41e53a3ed558" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/frontend/src/components/ColorPopup.jsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/src/data/colorDB.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/src/utils/colorUtils.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/App.js" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/App.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/components/Carousel.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/components/Carousel.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/components/FloatingBackground.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/components/FloatingBackground.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/components/Intro.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/components/Intro.jsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/frontend/src/components/UploadPanel.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/components/UploadPanel.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/index.css" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/index.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/pages/Home.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/pages/Home.jsx" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -22,8 +19,8 @@
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
       <list>
-        <option value="JavaScript File" />
         <option value="JSX File" />
+        <option value="JavaScript File" />
       </list>
     </option>
   </component>
@@ -82,7 +79,7 @@
       <workItem from="1745733439926" duration="11919000" />
       <workItem from="1745988376289" duration="4474000" />
       <workItem from="1746133500863" duration="16374000" />
-      <workItem from="1747262840854" duration="20170000" />
+      <workItem from="1747262840854" duration="23834000" />
     </task>
     <servers />
   </component>
