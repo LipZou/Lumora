@@ -29,4 +29,22 @@ router.post('/:userId', async (req, res) => {
     res.json(user.colors);
 });
 
+// POST /api/colors/:userId/batch 批量添加颜色
+router.post('/:userId/batch', async (req, res) => {
+    const user = await User.findById(req.params.userId);
+    if (!user) return res.status(404).send('User not found');
+
+    const newColors = req.body.colors || [];
+
+    for (const color of newColors) {
+        const exists = user.colors.some(c => c.hex.toLowerCase() === color.hex.toLowerCase());
+        if (!exists) {
+            user.colors.push(color);
+        }
+    }
+
+    await user.save();
+    res.json(user.colors);
+});
+
 module.exports = router;

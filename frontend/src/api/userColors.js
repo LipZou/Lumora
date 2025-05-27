@@ -11,4 +11,9 @@ const addUserColor = async (userId, color) => {
     await axios.post(`/api/colors/${userId}`, color);
 };
 
-export { getUserColors, addUserColor };
+// ✅ 批量添加颜色
+const addUserColorsBatch = async (userId, colors) => {
+    await axios.post(`/api/colors/${userId}/batch`, { colors });
+};
+
+export { getUserColors, addUserColor, addUserColorsBatch};

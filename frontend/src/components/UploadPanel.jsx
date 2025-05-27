@@ -2,7 +2,7 @@ import React, { useState, useRef, useEffect } from 'react';
 import ColorPopup from './ColorPopup';
 import { extractDominantColors, matchColorsWithDatabase } from '../utils/colorUtils';
 import { colorDB } from '../data/colorDB'; // 如果你系统色表在另一个文件中
-import { getUserColors, addUserColor } from '../api/userColors';
+import { getUserColors, addUserColor, addUserColorsBatch } from '../api/userColors';
 
 function UploadPanel() {
     const [image, setImage] = useState(null);
@@ -87,9 +87,7 @@ function UploadPanel() {
         const { newColors, existingColors } = await analyzeImageColors(image, colorDB, userColors);
 
         // 保存新颜色到数据库
-        for (const color of newColors) {
-            await addUserColor(userId, color);
-        }
+        await addUserColorsBatch(userId, newColors);
 
         // 弹窗展示
         setNewColors(newColors);
