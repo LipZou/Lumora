@@ -5,10 +5,13 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="6f0cfcf1-2321-42cf-a5f9-41e53a3ed558" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/frontend/src/components/Header.jsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/routes/userColors.js" beforeDir="false" afterPath="$PROJECT_DIR$/backend/routes/userColors.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/api/userColors.js" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/api/userColors.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/components/UploadPanel.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/components/UploadPanel.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/components/HomeHeader.jsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/components/UserHeader.jsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/pages/Dashboard.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/pages/Dashboard.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/pages/Home.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/pages/Home.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/pages/LoggedInHome.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/pages/LoggedInHome.jsx" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -18,8 +21,8 @@
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
       <list>
-        <option value="JSX File" />
         <option value="JavaScript File" />
+        <option value="JSX File" />
       </list>
     </option>
   </component>
@@ -81,7 +84,7 @@
       <workItem from="1747262840854" duration="24215000" />
       <workItem from="1747551064420" duration="8807000" />
       <workItem from="1747613068940" duration="7652000" />
-      <workItem from="1748364060995" duration="1609000" />
+      <workItem from="1748364060995" duration="3137000" />
     </task>
     <servers />
   </component>

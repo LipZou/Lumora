@@ -1,11 +1,11 @@
 import React from 'react';
-import UserHeader from '../components/UserHeader';
+import Header from '../components/Header';
 import UploadPanel from "../components/UploadPanel";
 
 function Dashboard() {
     return(
         <div>
-            <UserHeader currentPage="dashboard" />   {/* ✅ 传入不同身份 */}
+            <Header />   {/* ✅ 传入不同身份 */}
             <UploadPanel />
         </div>
     );

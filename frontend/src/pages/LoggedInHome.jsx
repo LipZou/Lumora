@@ -1,12 +1,12 @@
 import React from 'react';
-import UserHeader from '../components/UserHeader';
+import Header from '../components/Header';
 import Carousel from '../components/Carousel';
 import ColorQuote from '../components/Intro';
 
 function LoggedInHome() {
     return (
         <div>
-            <UserHeader currentPage="home" />
+            <Header />
             <Carousel />
             <ColorQuote />
         </div>

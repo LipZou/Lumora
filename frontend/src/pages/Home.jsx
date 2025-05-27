@@ -1,4 +1,4 @@
-import HomeHeader from '../components/HomeHeader';  // 引入新的组件名
+import Header from '../components/Header';  // 引入新的组件名
 import Carousel from '../components/Carousel'
 import Intro from '../components/Intro'
 
@@ -6,7 +6,7 @@ import Intro from '../components/Intro'
 function Home() {
     return (
         <div style={wrapperStyle}>
-            <HomeHeader />
+            <Header />
             <Carousel />
             <Intro />
             {/* 下面是Gallery和Text */}
