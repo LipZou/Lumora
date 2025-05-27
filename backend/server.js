@@ -4,6 +4,7 @@ const cors = require('cors');
 const mongoose = require('mongoose');
 const authRoutes = require('./routes/auth');
 const colorRoutes = require('./routes/userColors');
+require('dotenv').config();
 
 const MONGO_URL = 'mongodb://localhost:27017/lumora';
 const PORT = 5001;
