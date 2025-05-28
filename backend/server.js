@@ -4,6 +4,8 @@ const cors = require('cors');
 const mongoose = require('mongoose');
 const authRoutes = require('./routes/auth');
 const colorRoutes = require('./routes/userColors');
+const profileRoutes = require('./routes/profile');
+
 require('dotenv').config();
 
 const MONGO_URL = 'mongodb://localhost:27017/lumora';
@@ -23,6 +25,8 @@ app.use(express.json());
 // 路由模块挂载
 app.use('/api', authRoutes);
 app.use('/api/colors', colorRoutes);
+app.use('/uploads', express.static('uploads'));
+app.use('/api/profile', profileRoutes)
 
 app.listen(PORT, () => {
     console.log(`🚀 Server is running at http://localhost:${PORT}`);

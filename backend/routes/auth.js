@@ -2,11 +2,29 @@ const express = require('express');
 const router = express.Router();
 const User = require('../models/User');
 const nodemailer = require('nodemailer');
+const multer = require('multer');
+const path = require('path');
 
 require('dotenv').config();
 
 const emailCodes = {}; // { email: { code, expiresAt, verified } }
 
+
+// 添加上传配置
+const storage = multer.diskStorage({
+    destination: function (req, file, cb) {
+        cb(null, 'uploads/'); // 本地 uploads 目录
+    },
+    filename: function (req, file, cb) {
+        const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
+        cb(null, uniqueSuffix + path.extname(file.originalname));
+    },
+});
+
+const upload = multer({ storage });
+
+
+// gamil验证信息
 const transporter = nodemailer.createTransport({
     service: 'gmail',
     auth: {
@@ -85,7 +103,7 @@ router.post('/verify-code', (req, res) => {
 router.post('/signup', async (req, res) => {
     const { email, password } = req.body;
 
-    // 3.1 前置验证
+    // 前置校验
     if (!email || !password || password.length < 8) {
         return res.json({ success: false, message: 'Invalid registration data' });
     }
@@ -101,12 +119,16 @@ router.post('/signup', async (req, res) => {
             return res.json({ success: false, message: 'Email is already registered' });
         }
 
-        const newUser = new User({ email, password });
+        const newUser = new User({ email, password }); // ✅ 不包含用户名、头像
         await newUser.save();
 
-        delete emailCodes[email]; // 清除验证记录
+        delete emailCodes[email]; // 清除验证码记录
 
-        return res.json({ success: true, message: 'Registration successful' });
+        return res.json({
+            success: true,
+            message: 'Registration successful',
+            userId: newUser._id, // ✅ 前端需要这个跳转到 /setup/:userId
+        });
     } catch (error) {
         console.error('Signup error:', error);
         return res.status(500).json({ success: false, message: 'Server error' });

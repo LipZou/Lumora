@@ -8,6 +8,8 @@ import SignUp from './pages/SignUp'
 import Dashboard from './pages/Dashboard'
 import LoggedInHome from './pages/LoggedInHome'
 import FloatingBackground from './components/FloatingBackground';
+import Profile from "./pages/Profile";
+import Setup from "./pages/Setup"
 
 function App() {
   const [image, setImage] = useState(null);
@@ -32,6 +34,8 @@ function App() {
           <Route path="/signup" element={<SignUp />} />
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/home" element={<LoggedInHome />} />
+          <Route path="/profile" element={<Profile />} />
+          <Route path="/setup/:userId" element={<Setup />} />
           {/* 以后可以加更多，比如 /signup */}
         </Routes>
       </Router>
